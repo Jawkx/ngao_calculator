@@ -1,8 +1,7 @@
 from itertools import permutations 
 
-cards_input = raw_input("input(dont need seperate) (10 is 0):")
-raw_cards_list = str.split(cards_input)
-cardlist = [ [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] ]
+
+
 
 def lsum(arr):
 	sum = 0
@@ -80,75 +79,81 @@ def countcheck(arr):
 	return max(allpossibility)
 
 
+class cards:
 
-if len(raw_cards_list) == 5 :
-	for i in range ( 0 , 5 ):
-		
-		if len( raw_cards_list[i] ) == 2 :
+	def __init__(self):
+		cards_input = raw_input("input(dont need seperate) (10 is 0):")
+		raw_cards_list = str.split(cards_input)
+		self.cardlist = [ [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] ]
 
-			try:
-				cardnum = int(raw_cards_list[i][0])
-				cardlist[i][0] = cardnum
-			except:
+		if len(raw_cards_list) == 5 :
+			for i in range ( 0 , 5 ):
 				
-				if raw_cards_list[i][0] == 'j':
-					cardlist[i] = [10,0,1]
-				elif raw_cards_list[i][0] == 'q':
-					cardlist[i] = [10,0,2]
-				elif raw_cards_list[i][0] == 'k':
-					cardlist[i] = [10,0,3]
+				if len( raw_cards_list[i] ) == 2 :
+
+					try:
+						cardnum = int(raw_cards_list[i][0])
+						self.cardlist[i][0] = cardnum
+					except:
+						if raw_cards_list[i][0] == 'j':
+							self.cardlist[i] = [10,0,1]
+						elif raw_cards_list[i][0] == 'q':
+							self.cardlist[i] = [10,0,2]
+						elif raw_cards_list[i][0] == 'k':
+							self.cardlist[i] = [10,0,3]
+						else:
+							print 'invalid input b'
+							exit()
+
+					card_shape = raw_cards_list[i][1] 
+					if card_shape == 'd' :
+						self.cardlist[i][1] = 0
+					elif card_shape == 'c' :
+						self.cardlist[i][1] = 1
+					elif card_shape == 'h' :
+						self.cardlist[i][1] = 2
+					elif card_shape == 's' :
+						self.cardlist[i][1] = 3
 				else:
-					print 'invalid input'
+					print 'invalid input a'
 					exit()
+		else :
+			print 'card is not enough'
 
-			card_shape = raw_cards_list[i][1] 
-			if card_shape == 'd' :
-				cardlist[i][1] = 0
-			elif card_shape == 'c' :
-				cardlist[i][1] = 1
-			elif card_shape == 'h' :
-				cardlist[i][1] = 2
-			elif card_shape == 's' :
-				cardlist[i][1] = 3
-
-		else:
-			print 'invalid input'
-			exit()
-
-	#print cardlist
-	possibility = list(permutations(cardlist,5))
-	all_arrange = []
-	have_passport = []
-	for j in range ( 0 , len(possibility) ):
-		all_arrange.append(possibility[j])
-		if passportcheck(possibility[j]) == True :
-			have_passport.append(possibility[j])
+	def calculate(self):
+			possibility = list(permutations(self.cardlist,5))
+			all_arrange = []
+			have_passport = []
+			for j in range ( 0 , len(possibility) ):
+				all_arrange.append(possibility[j])
+				if passportcheck(possibility[j]) == True :
+					have_passport.append(possibility[j])
 
 
-	if len(have_passport) != 0 :
-		highestcount = 0
-		highestcountloc = 0
-		for k in range ( 0 , len(have_passport) ):
-			current_set = have_passport[k]
-			if fullpicturecheck( current_set ) == True:
-				print current_set , 'full picture'
-				exit()
-			elif donggucheck( current_set ) == True :
-				print current_set , 'donggu'
-				exit()
-			elif bouboucheck( current_set ) == True :
-				print current_set , 'bou bou'
-				exit()
-			else :
-				currentcount = countcheck( current_set )
-				if currentcount > highestcount :
-					highestcount = currentcount
-					highestcountloc = k
+			if len(have_passport) != 0 :
+				highestcount = 0
+				highestcountloc = 0
+				for k in range ( 0 , len(have_passport) ):
+					current_set = have_passport[k]
+					if fullpicturecheck( current_set ) == True:
+						print current_set , 'full picture'
+						exit()
+					elif donggucheck( current_set ) == True :
+						print current_set , 'donggu'
+						exit()
+					elif bouboucheck( current_set ) == True :
+						print current_set , 'bou bou'
+						exit()
+					else :
+						currentcount = countcheck( current_set )
+						if currentcount > highestcount :
+							highestcount = currentcount
+							highestcountloc = k
 
-		print have_passport[k] , highestcount
-				
-	else:
-		print 'no passport'
+				print have_passport[highestcountloc] , highestcount
+						
+			else:
+				print 'no passport'
 
-else :
-	print 'card is not enough'
+card1 = cards()
+card1.calculate()
