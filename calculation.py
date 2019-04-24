@@ -1,12 +1,15 @@
 from itertools import permutations 
 
+#variables for cvtback()
+index_num2shape = [ 0 , 1 , 2 , 3 , 'Diamond' , 'Cotton' , 'Heart' , 'Spade']
+index_num2picture = [ 1 , 2 , 3 , 'J' , 'Q' , 'K' ]
+#General function
 def lsum(arr):
 	sum = 0
 	for x in range (0,len(arr)):
 		sum = sum + arr[x]
 		
 	return sum
-
 
 def passportcheck(target):
 	tscount = 0
@@ -53,7 +56,7 @@ def donggucheck(arr):
 def bouboucheck(arr):
 	if arr[3][2] != 0 and arr[3][2] == arr[4][2]:
 		return True
-	elif arr[3][0] == arr[4][0]:
+	elif arr[3][0] == arr[4][0] and arr[3][2] == 0 and arr[4][2] == 0:
 		return True
 	elif arr[3][0] == 3 and arr[4][0] == 6 :
 		return True
@@ -75,36 +78,53 @@ def countcheck(arr):
 
 	return max(allpossibility)
 
+def cvtback(arr):
+	converted = []
+	for i in range ( 0 , len(arr) ):
+		current_list = arr[i]
+		current_string = ''
+		if len(current_list) == 3 :
+			shape_index = index_num2shape.index( current_list[1] ) + 4 
+			if current_list[2] == 0:
+				current_string = str(current_list[0]) + index_num2shape[shape_index]
+			else:
+				picture_index = index_num2picture.index( current_list[2] ) + 3
+				current_string = index_num2picture[picture_index] + index_num2shape[shape_index]
 
+		converted.append(current_string)
+
+	return converted
 class cards:
-	cardvalue = []
+	value = None
 	cardlist = [ [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] ]
 	have_passport = []
 	all_arrange = []
-	def __init__(self):
-		cards_input = raw_input("input(dont need seperate) (10 is 0):")
-		raw_cards_list = str.split(cards_input)
 
-		if len(raw_cards_list) == 5 :
+	def registercard(self):
+		if len(self.raw_cards_list) == 5 :
 			for i in range ( 0 , 5 ):
 				
-				if len( raw_cards_list[i] ) == 2 :
+				if len( self.raw_cards_list[i] ) == 2 :
 
 					try:
-						cardnum = int(raw_cards_list[i][0])
-						self.cardlist[i][0] = cardnum
+						cardnum = int(self.raw_cards_list[i][0])
+						if cardnum == 0 :
+							self.cardlist[i][0] = 10
+						else :
+							self.cardlist[i][0] = cardnum
 					except:
-						if raw_cards_list[i][0] == 'j':
+						if self.raw_cards_list[i][0] == 'j':
 							self.cardlist[i] = [10,0,1]
-						elif raw_cards_list[i][0] == 'q':
+						elif self.raw_cards_list[i][0] == 'q':
 							self.cardlist[i] = [10,0,2]
-						elif raw_cards_list[i][0] == 'k':
+						elif self.raw_cards_list[i][0] == 'k':
 							self.cardlist[i] = [10,0,3]
 						else:
-							print 'invalid input '
-							exit()
+							print 'invalid input : cards have unexpected attributes for type'
+							print 'not and integer of not j q and k'
+							break
 
-					card_shape = raw_cards_list[i][1] 
+					card_shape = self.raw_cards_list[i][1] 
 					if card_shape == 'd' :
 						self.cardlist[i][1] = 0
 					elif card_shape == 'c' :
@@ -113,13 +133,30 @@ class cards:
 						self.cardlist[i][1] = 2
 					elif card_shape == 's' :
 						self.cardlist[i][1] = 3
+					else:
+						print 'invalid input : card have unexpected attributes for shapes'
+						print 'd - diamond'
+						print 'c - cotton'
+						print 'h - heart'
+						print 's - spade'
+						break
 				else:
-					print 'invalid input a'
-					exit()
+					print 'to much argument for a card'
+					print 'REMINDER 10 SHOULD BE 0'
 		else :
 			print 'card is not enough'
 
+	def printPassport(self):
+		for i in range ( 0 , len( self.have_passport ) ):
+			print self.have_passport[i]
 
+		print '-- End of List --'
+
+	def printAllArrange(self):
+		for i in range ( 0 , len( self.all_arrange ) ):
+			print self.all_arrange[i]
+
+		print '-- End of List --'
 	def calculate(self):
 			possibility = list(permutations(self.cardlist,5))
 			self.all_arrange = possibility
@@ -134,30 +171,38 @@ class cards:
 				for k in range ( 0 , len(self.have_passport) ):
 					current_set = self.have_passport[k]
 					if fullpicturecheck( current_set ) == True:
-						self.cardvalue = 'full picture'
+						self.value = 'full picture'
 						self.highestset = current_set
-						exit()
+						break
 					elif donggucheck( current_set ) == True :
-						self.cardvalue = 'donggu'
+						self.value = 'donggu'
 						self.highestset = current_set
-						exit()
+						break
 					elif bouboucheck( current_set ) == True :
-						self.cardvalue = 'bou bou'
+						self.value = 'bou bou'
 						self.highestset = current_set
-						exit()
+						break
 					else :
 						currentcount = countcheck( current_set )
 						if currentcount > highestcount :
 							highestcount = currentcount
 							highestcountloc = k
 
-				self.cardvalue = highestcount
-				self.highestset = self.have_passport[highestcountloc]
+						if highestcount == 0 :
+							self.value = 10
+						else:
+							self.value = highestcount
+
+						self.highestset = self.have_passport[highestcountloc]
 						
 			else:
-				print 'no passport'
+				self.value = 'mou din'
 
-card1 = cards()
-card1.calculate()
-print card1.highestset
-print card1.cardvalue
+	def __init__(self,cards_input):
+		self.raw_cards_list = str.split(cards_input)
+		self.registercard()
+		self.calculate()
+
+
+
+
