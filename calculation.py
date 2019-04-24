@@ -1,8 +1,5 @@
 from itertools import permutations 
 
-
-
-
 def lsum(arr):
 	sum = 0
 	for x in range (0,len(arr)):
@@ -80,11 +77,13 @@ def countcheck(arr):
 
 
 class cards:
-
+	cardvalue = []
+	cardlist = [ [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] ]
+	have_passport = []
+	all_arrange = []
 	def __init__(self):
 		cards_input = raw_input("input(dont need seperate) (10 is 0):")
 		raw_cards_list = str.split(cards_input)
-		self.cardlist = [ [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] ]
 
 		if len(raw_cards_list) == 5 :
 			for i in range ( 0 , 5 ):
@@ -102,7 +101,7 @@ class cards:
 						elif raw_cards_list[i][0] == 'k':
 							self.cardlist[i] = [10,0,3]
 						else:
-							print 'invalid input b'
+							print 'invalid input '
 							exit()
 
 					card_shape = raw_cards_list[i][1] 
@@ -120,29 +119,31 @@ class cards:
 		else :
 			print 'card is not enough'
 
+
 	def calculate(self):
 			possibility = list(permutations(self.cardlist,5))
-			all_arrange = []
-			have_passport = []
+			self.all_arrange = possibility
 			for j in range ( 0 , len(possibility) ):
-				all_arrange.append(possibility[j])
 				if passportcheck(possibility[j]) == True :
-					have_passport.append(possibility[j])
+					self.have_passport.append(possibility[j])
 
 
-			if len(have_passport) != 0 :
+			if len(self.have_passport) != 0 :
 				highestcount = 0
 				highestcountloc = 0
-				for k in range ( 0 , len(have_passport) ):
-					current_set = have_passport[k]
+				for k in range ( 0 , len(self.have_passport) ):
+					current_set = self.have_passport[k]
 					if fullpicturecheck( current_set ) == True:
-						print current_set , 'full picture'
+						self.cardvalue = 'full picture'
+						self.highestset = current_set
 						exit()
 					elif donggucheck( current_set ) == True :
-						print current_set , 'donggu'
+						self.cardvalue = 'donggu'
+						self.highestset = current_set
 						exit()
 					elif bouboucheck( current_set ) == True :
-						print current_set , 'bou bou'
+						self.cardvalue = 'bou bou'
+						self.highestset = current_set
 						exit()
 					else :
 						currentcount = countcheck( current_set )
@@ -150,10 +151,13 @@ class cards:
 							highestcount = currentcount
 							highestcountloc = k
 
-				print have_passport[highestcountloc] , highestcount
+				self.cardvalue = highestcount
+				self.highestset = self.have_passport[highestcountloc]
 						
 			else:
 				print 'no passport'
 
 card1 = cards()
 card1.calculate()
+print card1.highestset
+print card1.cardvalue
