@@ -1,8 +1,9 @@
 from itertools import permutations 
 
-#variables for cvtback()
+#variables for cvt2raw()
 index_num2shape = [ 0 , 1 , 2 , 3 , 'Diamond' , 'Cotton' , 'Heart' , 'Spade']
 index_num2picture = [ 1 , 2 , 3 , 'J' , 'Q' , 'K' ]
+
 #General function
 def lsum(arr):
 	sum = 0
@@ -78,7 +79,7 @@ def countcheck(arr):
 
 	return max(allpossibility)
 
-def cvtback(arr):
+def cvt2raw(arr):
 	converted = []
 	for i in range ( 0 , len(arr) ):
 		current_list = arr[i]
@@ -86,21 +87,22 @@ def cvtback(arr):
 		if len(current_list) == 3 :
 			shape_index = index_num2shape.index( current_list[1] ) + 4 
 			if current_list[2] == 0:
-				current_string = str(current_list[0]) + index_num2shape[shape_index]
+				current_string = str(current_list[0]) + ' ' + index_num2shape[shape_index]
 			else:
 				picture_index = index_num2picture.index( current_list[2] ) + 3
-				current_string = index_num2picture[picture_index] + index_num2shape[shape_index]
+				current_string = index_num2picture[picture_index] + ' ' + index_num2shape[shape_index]
 
 		converted.append(current_string)
 
 	return converted
-class cards:
+
+class ngaocards:
 	value = None
 	cardlist = [ [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] , [0,0,0] ]
 	have_passport = []
 	all_arrange = []
 
-	def registercard(self):
+	def encodecard(self):
 		if len(self.raw_cards_list) == 5 :
 			for i in range ( 0 , 5 ):
 				
@@ -148,15 +150,16 @@ class cards:
 
 	def printPassport(self):
 		for i in range ( 0 , len( self.have_passport ) ):
-			print self.have_passport[i]
+			print cvt2raw(self.have_passport[i])
 
 		print '-- End of List --'
 
 	def printAllArrange(self):
 		for i in range ( 0 , len( self.all_arrange ) ):
-			print self.all_arrange[i]
+			print cvt2raw(self.all_arrange[i])
 
 		print '-- End of List --'
+
 	def calculate(self):
 			possibility = list(permutations(self.cardlist,5))
 			self.all_arrange = possibility
@@ -193,16 +196,12 @@ class cards:
 						else:
 							self.value = highestcount
 
-						self.highestset = self.have_passport[highestcountloc]
+						self.highestset = cvt2raw(self.have_passport[highestcountloc])
 						
 			else:
 				self.value = 'mou din'
 
 	def __init__(self,cards_input):
 		self.raw_cards_list = str.split(cards_input)
-		self.registercard()
+		self.encodecard()
 		self.calculate()
-
-
-
-
