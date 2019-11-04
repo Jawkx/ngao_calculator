@@ -122,8 +122,8 @@ class ngaocards:
 						elif self.raw_cards_list[i][0] == 'k':
 							self.cardlist[i] = [10,0,3]
 						else:
-							print 'invalid input : cards have unexpected attributes for type'
-							print 'not and integer of not j q and k'
+							print ("invalid input : cards have unexpected attributes for type")
+							print ('not and integer of not j q and k')
 							break
 
 					card_shape = self.raw_cards_list[i][1] 
@@ -136,29 +136,29 @@ class ngaocards:
 					elif card_shape == 's' :
 						self.cardlist[i][1] = 3
 					else:
-						print 'invalid input : card have unexpected attributes for shapes'
-						print 'd - diamond'
-						print 'c - cotton'
-						print 'h - heart'
-						print 's - spade'
+						print ('invalid input : card have unexpected attributes for shapes')
+						print ('d - diamond')
+						print ('c - cotton')
+						print ('h - heart')
+						print ('s - spade')
 						break
 				else:
-					print 'to much argument for a card'
-					print 'REMINDER 10 SHOULD BE 0'
+					print ('to much argument for a card')
+					print ('REMINDER 10 SHOULD BE 0')
 		else :
-			print 'card is not enough'
+			print ('card is not enough')
 
 	def printPassport(self):
 		for i in range ( 0 , len( self.have_passport ) ):
-			print cvt2raw(self.have_passport[i])
+			print (cvt2raw(self.have_passport[i]))
 
-		print '-- End of List --'
+		print ('-- End of List --')
 
 	def printAllArrange(self):
 		for i in range ( 0 , len( self.all_arrange ) ):
-			print cvt2raw(self.all_arrange[i])
+			print (cvt2raw(self.all_arrange[i]))
 
-		print '-- End of List --'
+		print ('-- End of List --')
 
 	def calculate(self):
 			possibility = list(permutations(self.cardlist,5))
@@ -205,3 +205,7 @@ class ngaocards:
 		self.raw_cards_list = str.split(cards_input)
 		self.encodecard()
 		self.calculate()
+
+jawcard = ngaocards('3d js kd 1s 6c')
+print (jawcard.value)
+
